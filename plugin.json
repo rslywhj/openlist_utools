@@ -3,6 +3,7 @@
   "description": "快捷管理自建 OpenList，并将匹配到的本地文件上传到预设路径。",
   "version": "0.1.0",
   "author": "openlist-utools",
+  "license": "MIT",
   "homepage": "",
   "main": "index.html",
   "logo": "logo.png",
