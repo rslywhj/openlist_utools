@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenList 管理器</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <nav class="tabs" aria-label="功能切换">
+          <button class="tab" data-tab="manager">
+            <span>文件</span>
+          </button>
+          <button class="tab" data-tab="upload">
+            <span>上传</span>
+          </button>
+          <button class="tab" data-tab="presets">
+            <span>预设</span>
+          </button>
+          <button class="tab" data-tab="settings">
+            <span>设置</span>
+          </button>
+        </nav>
+
+        <div class="connection-card">
+          <span id="connectionDot" class="dot"></span>
+          <div>
+            <strong id="connectionTitle">未连接</strong>
+            <small id="connectionMeta">请先完成服务器设置</small>
+          </div>
+        </div>
+      </aside>
+
+      <section class="workspace">
+        <section id="message" class="message" hidden></section>
+
+        <section id="quickUpload" class="quick-upload" hidden>
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Quick Upload</p>
+              <h2>选择目标路径后立即上传</h2>
+              <p id="quickUploadSummary">等待读取文件...</p>
+            </div>
+            <button id="quickBackButton" class="button button-secondary" type="button">进入上传页</button>
+          </div>
+          <div id="quickPresetList" class="quick-preset-list"></div>
+          <div id="quickUploadStatus" class="file-list"></div>
+        </section>
+
+        <section id="manager" class="panel is-active">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Remote Files</p>
+              <h2>远端文件管理</h2>
+              <p>浏览目录，执行新建、重命名、删除、复制和移动。</p>
+            </div>
+            <button id="refreshButton" class="button button-secondary">刷新</button>
+          </div>
+
+          <div class="path-bar">
+            <button id="goUpButton" class="button button-ghost">上级</button>
+            <input id="currentPathInput" type="text" value="/" spellcheck="false" />
+            <button id="openPathButton" class="button">打开</button>
+            <button id="mkdirButton" class="button button-secondary">新建目录</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>名称</th>
+                  <th>类型</th>
+                  <th>大小</th>
+                  <th>修改时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="remoteTableBody">
+                <tr>
+                  <td colspan="5" class="empty-cell">未加载目录</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="upload" class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Uploader</p>
+              <h2>上传到 OpenList</h2>
+              <p>选择本地文件和远端路径预设后开始上传。</p>
+            </div>
+            <button id="pickFilesButton" class="button button-secondary">选择文件</button>
+            <input id="localFilePicker" type="file" multiple hidden />
+          </div>
+
+          <div id="dropZone" class="drop-zone">
+            <strong>拖放文件到这里</strong>
+            <p>也可以通过 uTools 文件匹配入口直接上传。</p>
+          </div>
+
+          <div class="form-row">
+            <label for="uploadPreset">目标路径</label>
+            <select id="uploadPreset"></select>
+            <button id="uploadAllButton" class="button">开始上传</button>
+          </div>
+
+          <div id="uploadList" class="file-list empty-state">暂无待上传文件</div>
+        </section>
+
+        <section id="presets" class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Path Presets</p>
+              <h2>路径预设</h2>
+              <p>维护常用远端目录，上传时可一键选择。</p>
+            </div>
+          </div>
+
+          <form id="presetForm" class="card-form">
+            <input id="presetName" type="text" placeholder="预设名称，例如：影视" />
+            <div class="path-picker-field">
+              <input id="presetPath" type="text" placeholder="远端路径，例如：/media/movies" />
+              <button id="choosePresetPathButton" class="button button-secondary" type="button">选择</button>
+            </div>
+            <button class="button" type="submit">添加预设</button>
+          </form>
+
+          <div id="presetList" class="preset-list"></div>
+        </section>
+
+        <section id="settings" class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Connection</p>
+              <h2>连接设置</h2>
+              <p>支持直接使用 Token，或使用账号密码换取 Token。</p>
+            </div>
+          </div>
+
+          <form id="settingsForm" class="settings-grid">
+            <label>
+              <span>服务器地址</span>
+              <input id="serverUrl" type="url" placeholder="https://openlist.example.com" required />
+            </label>
+
+            <label>
+              <span>认证方式</span>
+              <select id="authMode">
+                <option value="token">API Token</option>
+                <option value="password">账号密码登录</option>
+              </select>
+            </label>
+
+            <label class="token-field">
+              <span>Token</span>
+              <textarea id="tokenInput" rows="3" placeholder="粘贴 OpenList Token"></textarea>
+            </label>
+
+            <label class="password-field">
+              <span>用户名</span>
+              <input id="usernameInput" type="text" autocomplete="username" />
+            </label>
+
+            <label class="password-field">
+              <span>密码</span>
+              <input id="passwordInput" type="password" autocomplete="current-password" placeholder="仅用于本次换取 Token，不保存" />
+            </label>
+
+            <div class="actions">
+              <button id="testConnectionButton" class="button button-secondary" type="button">测试连接</button>
+              <button class="button" type="submit">保存设置</button>
+            </div>
+          </form>
+        </section>
+      </section>
+
+      <div id="dialogOverlay" class="dialog-overlay" hidden>
+        <form id="dialogForm" class="dialog-card">
+          <h3 id="dialogTitle">操作</h3>
+          <p id="dialogMessage"></p>
+          <input id="dialogInput" type="text" spellcheck="false" />
+          <div class="dialog-actions">
+            <button id="dialogCancelButton" class="button button-ghost" type="button">取消</button>
+            <button id="dialogConfirmButton" class="button" type="submit">确认</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="pathDialogOverlay" class="dialog-overlay" hidden>
+        <form id="pathDialogForm" class="dialog-card path-dialog">
+          <div>
+            <h3 id="pathDialogTitle">选择路径</h3>
+            <p id="pathDialogMessage">选择一个远端目录</p>
+          </div>
+          <div class="path-dialog-bar">
+            <button id="pathDialogUpButton" class="button button-ghost" type="button">上级</button>
+            <input id="pathDialogCurrent" type="text" value="/" spellcheck="false" />
+            <button id="pathDialogOpenButton" class="button button-secondary" type="button">打开</button>
+          </div>
+          <div id="pathDialogList" class="path-dialog-list"></div>
+          <div class="dialog-actions">
+            <button id="pathDialogCancelButton" class="button button-ghost" type="button">取消</button>
+            <button id="pathDialogConfirmButton" class="button" type="submit">选择此目录</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <script src="./index.js"></script>
+  </body>
+</html>

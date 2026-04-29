@@ -1,0 +1,45 @@
+{
+  "pluginName": "OpenList 管理器",
+  "description": "快捷管理自建 OpenList，并将匹配到的本地文件上传到预设路径。",
+  "version": "0.1.0",
+  "author": "openlist-utools",
+  "homepage": "",
+  "main": "index.html",
+  "logo": "logo.png",
+  "preload": "preload.js",
+  "platform": ["win32", "darwin", "linux"],
+  "features": [
+    {
+      "code": "openlist-manager",
+      "explain": "打开 OpenList 文件管理",
+      "cmds": ["OpenList 管理", "OpenList 文件管理", "openlist"]
+    },
+    {
+      "code": "openlist-settings",
+      "explain": "打开 OpenList 连接设置",
+      "cmds": ["OpenList 设置", "OpenList 连接设置"]
+    },
+    {
+      "code": "openlist-presets",
+      "explain": "打开 OpenList 路径预设",
+      "cmds": ["OpenList 路径预设", "OpenList 预设"]
+    },
+    {
+      "code": "openlist-upload-page",
+      "explain": "打开 OpenList 上传页面",
+      "cmds": ["上传到 OpenList", "OpenList 上传"]
+    },
+    {
+      "code": "openlist-upload-files",
+      "explain": "上传匹配到的文件到 OpenList",
+      "cmds": [
+        {
+          "type": "files",
+          "label": "上传到 OpenList",
+          "fileType": "file",
+          "minLength": 1
+        }
+      ]
+    }
+  ]
+}
